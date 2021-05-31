@@ -6,13 +6,16 @@ code to generate the similarity metrices for historical data.
 2) To run the web service app. run the command
 python app.py  
 from inside the directory. A  message similar to the one shown below will appear- 
+
+
+
 """
    Use a production WSGI server instead.
- * Debug mode: on
- * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
- * Restarting with fsevents reloader
- * Debugger is active!
- * Debugger PIN: 340-093-492
+  Debug mode: on
+ Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ Restarting with fsevents reloader
+ Debugger is active!
+ Debugger PIN: 340-093-492
 127.0.0.1 - - [31/May/2021 16:37:11] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [31/May/2021 16:38:00] "POST /predict HTTP/1.1" 200 -
 127.0.0.1 - - [31/May/2021 17:03:38] "GET / HTTP/1.1" 200 -
