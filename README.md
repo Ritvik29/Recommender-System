@@ -40,12 +40,5 @@ This problem is evaluated like a multiclass problem, where the merchant_id is th
 A Dataframe of precision and recall scores is also computed for each merchant_id. Some merchant ids that received high scores in both  precision and recall include the merchant_id 1 and merchant_id 2. 
 
 
-## Deployment to Heroku.
-The web application is deployed on HEROKU at the given link. For a particular user_id, the application is able to predict the 
-merchant_id. 
-
-
-
-
 
 
