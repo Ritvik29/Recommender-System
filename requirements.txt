@@ -1,6 +1,6 @@
 numpy ==1.19.2
 pandas == 1.2.4
-sklearn==0.24.1
+sklearn
 json ==2.0.9
 flask ==1.1.2
 gunicorn==19.9.0
