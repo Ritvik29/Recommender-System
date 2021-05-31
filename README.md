@@ -1,84 +1,45 @@
 # Recommendation System(RecSys) Modelling
-## Overview
-Given the datasets of clicks of merchants on Shopback Korea between January - March 2021, you are required to :
-1. Build a prediction model to predict what is the next merchant a user will click.
-2. Serve the model in a web service.
 
-PS: you will not be assessed for the accuracy of the model, instead for the thoughts and engineering process while performing this exercise.
+## Running Instructions
+1) The main code file is in the jupyter notebook RecSys2.ipynb. Run this
+code to generate the similarity metrices for historical data.
+2) To run the web service app. run the command
+python app.py  
+from inside the directory
 
-## Schema
-### Clicks
-`data/clicks.parquet`
+## Methodology
+The Following Methodology was followed to implement the recommender system-
 
-| Column Name  | Description |
-| ------------- | ------------- |
-| id | Click Identifier |
-| user_id  | User Identifier  |
-| store_id  | Store Identifier  |
-| device  | User Device |
-| platform | Platform that user makes the click from |
-| channel | Channel that contributes the click |
-| created_at | Timestamp of the click is made |
+1) The clicks data was split into training and testing dataset with 95% training data and 5% testing data.
+the clicks data was merged with the stores data and the users data to create a unified training data
+for the ML model.
 
-### Stores
-`data/stores.parquet`
-| Column Name  | Description |
-| ------------- | ------------- |
-| id  | Store Identifier  |
-| merchant_id | Corresponding merchant identifier for the store |
-| start_at | Store Start Date |
-| end_at | Store End Date |
-| display_text | Text Displayed for the Store |
-| is_searchable | Where Store is Searchable from App |
+2) A cosine similarity is computed between users using cleaned text features from the stores and users database. This gives an array of similar users sorted by similarity
 
-*  Multiple stores might map to the same merchant
+3) calculate counts for a user-merchant combination. This is calculated by calculating the number of occurences of a 'user_id - merchant' combination in the views dataset. this metric counts the number of times a user visits a particular merchant. 
 
-### Users
-`data/users.parquet`
-| Column Name  | Description |
-| ------------- | ------------- |
-| id  | User Identifier  |
-| signup_datetime | Timestamp of User Sign Up |
-| lifetime_first_merchant | The first merchant that user purchase with Shopback |
-| lifetime_first_purchase_datetime | Datetime of first purchase |
-| account_referral | Referral of the account, usually refers to campaigns |
+4) So after following the above steps, we Have two matrices a) A similarity matrix for users, and a user-marchant count matrrix. Let this be called the 'favorite merchant'. The user-merchant count matrix contains the most commonly visited merchant for a particular user. and b) The similarity matrix for users which ranks users according to similarity.
 
-## EDA 
-> Estimate time to spend : 1-3 Hours
 
-Explore the given datasets, derive any interesting findings and visualize it using any tool of your choice. Example questions to answer are :
-* What are the most clicked merchant for month January 2021?
-* What are the distribution of clicks of merchant for month March 2021?
-* On average, what are the number of clicks user make in 1 month?
+5)The deployed recommender system makes use of both these matrices. For a given user_id n, performs the following steps - 
+a) Check if the user has a most visited merchant. If x is the most visited merchant by the user, return x.
+b) If condition a is not met, take the neighbor ( in terms of similarity) of n, and check his most visited merchant. Keep traveling 
+along the list of neighbors (from most similar to least similar) till one
+of the neighbor has a 'favorite merchant'.
 
-## Model Building
-> Estimate time to spend : 2-5 Hours
+6) If the conditions in 5 are not met, return the most popular merchant.
 
-Construct the prediction model using any algorithm(s) of your choice. You are required to:
-1. Perform Train-Test split for the datasets
-2. Measure the performance of the Test Dataset using any RecSys metrics.
+## Evaluation metrics.
+This problem is evaluated like a multiclass problem, where the merchant_id is the target variable. The weighted average precision and recall scores are used at an aggregate level.A Dataframe of precision and recall scores is also computed for each merchant_id. Some merchant ids that received high scores in both  precision and recall include the merchant_id 1 and merchant_id2. 
 
-## Model Serving
-> Estimate time to spend : 2-3 Hours
 
-Encapsulate the final model in form of a web service. The web framework can be written only in Python (most preferred) or Golang (2nd most preferred). 
 
-### Must have:
-1. The web service should have an endpoint called `/predict`, that takes in user-defined input as return a `merchant_id` as its prediction output. 
-2. Document clearly the steps to run the web service locally.
+## Deployment to Heroku.
+The web application is deployed on HEROKU at the given link. For a particular user_id, the application is able to predict the 
+merchant_id. 
 
-### Nice to have:
-1. Any additional endpoints, e.g. `/batch_predict`, for completeness.
-2. Dockerization of the service(s)
-3. Good Code Style (e.g. PEP 8 for python)
-4. Unit Testing
 
-## Submission
-Organize your files and folder like how you would organize in a proper Git Repository. Include the notebooks or scripts used during the exercise.
-Please attach a `README.md` file in your root directory that documents:
-1. Your file directories
-2. Notebooks Path for the corresponding task.
-3. Steps to run the Model Web Service
-4. and any that would help the interviewers navigate through the repository
 
-Zip the whole repository and send them back to Shopback Talent Acquisition Team.
+
+
+
