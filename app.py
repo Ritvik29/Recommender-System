@@ -2,6 +2,8 @@ import numpy as np
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
 from numpy import genfromtxt
+import ast
+
 
 app = Flask(__name__)
 #model = pickle.load(open('model.pkl', 'rb'))
@@ -15,7 +17,6 @@ def home():
 def predict():
     
     def helper():
-        import ast
         no_neighbor = 0
         user_merch = pd.read_csv("user_merch.csv", index_col = None)
         df4U = pd.read_csv('df4U.csv')
